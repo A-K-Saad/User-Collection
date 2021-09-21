@@ -1,20 +1,23 @@
-import data from "../data";
-const Display = ({ filterUser }) => {
+import { useState } from "react";
 
-  const allJobs = [];
+const Display = ({ filterUser, users }) => {
+  const [jobs, setJobs] = useState(users);
+  const [active, setActive] = useState("All");
 
-  data.forEach((user) => {
-    const jobs = user.job;
-    allJobs.push(jobs);
-  });
+  const uniqueJob = ["All", ...new Set(jobs.map((job) => job.job))];
 
-  const uniqueJob = ["All", ...new Set(allJobs)];
-  
   return (
     <div>
-      {uniqueJob.map((job) => {
+      {uniqueJob.map((job, index) => {
         return (
-          <button className="btn btn-purple" onClick={() => filterUser(job)}>
+          <button
+            className={`btn btn-purple ${job === active && "active-btn"}`}
+            onClick={(event) => {
+              filterUser(job, event);
+              setActive(event.target.innerText);
+            }}
+            key={index}
+          >
             {job}
           </button>
         );
